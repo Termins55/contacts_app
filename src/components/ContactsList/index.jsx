@@ -1,11 +1,21 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { deleteContact } from '../../store/slices/contactsSlice';
 
-function ContactsList ({ contacts }) {
+function ContactsList ({ contacts, deleteContactById }) {
   return (
     <ul>
       {contacts.map(c => (
-        <li key={c.id}>{JSON.stringify(c)}</li>
+        <li key={c.id}>
+          {JSON.stringify(c)}{' '}
+          <button
+            onClick={() => {
+              deleteContactById(c.id);
+            }}
+          >
+            Delete
+          </button>
+        </li>
       ))}
     </ul>
   );
@@ -13,4 +23,13 @@ function ContactsList ({ contacts }) {
 
 const mapStateToProps = ({ contactsList }) => contactsList;
 
-export default connect(mapStateToProps)(ContactsList);
+const mapDispatchToProps = dispatch => ({
+  deleteContactById: id => dispatch(deleteContact(id)),
+});
+// deleteContact(id) ===>
+//     action = {
+//        type: 'deleteContact',
+//        payload: id
+//     }
+
+export default connect(mapStateToProps, mapDispatchToProps)(ContactsList);
